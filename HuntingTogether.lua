@@ -279,38 +279,39 @@ do
         Session += 1
         local I = Session
         task.spawn(function()
-            while _G.AutoRespawn do
-                task.wait(0.1)
+            while task.wait(.1) do
                 pcall(function()
-                    if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Health > 0 then
-                        if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then OldCFrame = LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame end
-                        return
-                    end
-                    local DeadChar = LocalPlayer.Character
-                    repeat task.wait(.25)
-                        if LocalPlayer.PlayerGui:WaitForChild("HuntRespawn").Enabled then
-                            local Holder = LocalPlayer.PlayerGui:WaitForChild("HuntRespawn"):WaitForChild("Holder")
-                            local Window = Holder:WaitForChild("Window")
-                            local Card = Window:WaitForChild("Card_")
-                            local Body = Card:WaitForChild("Body")
-                            for _, b in pairs(Body:GetChildren()) do
-                                if b:IsA("ImageButton") and b.Image == "rbxassetid://102634679156347" then
-                                    GuiService.SelectedObject = b
-                                    VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.Return, false, game)
-                                    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-                                    VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.BackSlash, false, game)
-                                    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.BackSlash, false, game)
+                    if _G.AutoRespawn then
+                        if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Health > 0 then
+                            if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then OldCFrame = LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame end
+                            return
+                        end
+                        local DeadChar = LocalPlayer.Character
+                        repeat task.wait(.25)
+                            if LocalPlayer.PlayerGui:WaitForChild("HuntRespawn").Enabled then
+                                local Holder = LocalPlayer.PlayerGui:WaitForChild("HuntRespawn"):WaitForChild("Holder")
+                                local Window = Holder:WaitForChild("Window")
+                                local Card = Window:WaitForChild("Card_")
+                                local Body = Card:WaitForChild("Body")
+                                for _, b in pairs(Body:GetChildren()) do
+                                    if b:IsA("ImageButton") and b.Image == "rbxassetid://102634679156347" then
+                                        GuiService.SelectedObject = b
+                                        VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.Return, false, game)
+                                        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+                                        VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.BackSlash, false, game)
+                                        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.BackSlash, false, game)
+                                    end
                                 end
                             end
-                        end
-                        local NewCharacter = LocalPlayer.Character
-                        local NewHumanoid = NewCharacter and NewCharacter:FindFirstChildOfClass("Humanoid")
-                    until Session ~= I or (NewCharacter and NewCharacter ~= DeadChar and NewHumanoid and NewHumanoid.Health > 0)
-                    if LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10) and OldCFrame then
-                        for _ = 1, 8 do
-                            LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10).AssemblyLinearVelocity = Vector3.zero
-                            LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10).CFrame = OldCFrame
-                            task.wait(.15)
+                            local NewCharacter = LocalPlayer.Character
+                            local NewHumanoid = NewCharacter and NewCharacter:FindFirstChildOfClass("Humanoid")
+                        until Session ~= I or (NewCharacter and NewCharacter ~= DeadChar and NewHumanoid and NewHumanoid.Health > 0)
+                        if LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10) and OldCFrame then
+                            for _ = 1, 8 do
+                                LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10).AssemblyLinearVelocity = Vector3.zero
+                                LocalPlayer.Character:WaitForChild("HumanoidRootPart", 10).CFrame = OldCFrame
+                                task.wait(.15)
+                            end
                         end
                     end
                 end)
@@ -327,6 +328,23 @@ do
             else
                 Session += 1
             end
+        end
+    })
+    local AutoChests = HomeTab:Toggle({
+        Title = "Auto Cheats",
+        Desc = "ออโต้เปิดกล่อง",
+        Callback = function(Value)
+            _G.AutoChests = Value
+            task.spawn(function()
+                while task.wait(.1) do
+                    pcall(function()
+                        if _G.AutoChests then
+                            VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.E, false, game)
+                            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+                        end
+                    end)
+                end
+            end)
         end
     })
 end
