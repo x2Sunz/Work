@@ -347,4 +347,23 @@ do
             end)
         end
     })
+    local AutoCombat = HomeTab:Toggle({
+        Title = "Auto Combat",
+        Desc = "ออโต้ต่อสู้",
+        Callback = function(Value)
+            _G.AutoCombat = Value
+            task.spawn(function()
+                while task.wait(.1) do
+                    pcall(function()
+                        if _G.AutoCombat then
+                            if LocalPlayer.PlayerGui.LumiAuto.AutoButton.Body.Face.BackgroundColor3 == Color3.fromRGB(34, 46, 88) then
+                                VirtualInputManager:SendKeyEvent(true,  Enum.KeyCode.F, false, game)
+                                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.F, false, game)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    })
 end
